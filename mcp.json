@@ -1,0 +1,13 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "arcmira": {
+      "type": "streamable-http",
+      "url": "https://mcp.arcmira.com/mcp?via=hermes",
+      "headers": {
+        "Authorization": "Bearer ${ARCMIRA_API_KEY}",
+        "User-Agent": "arcmira-provider/hermes"
+      }
+    }
+  }
+}

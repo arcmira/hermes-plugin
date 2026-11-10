@@ -1,0 +1,10 @@
+# OAuth sign-in for Arcmira. Merge this entry into the active profile's
+# config.yaml, replacing any existing mcp_servers.arcmira entry as a whole,
+# then run: hermes mcp login arcmira
+# A native entry takes precedence over the plugin's API-key connection.
+mcp_servers:
+  arcmira:
+    url: https://mcp.arcmira.com/mcp?via=hermes
+    auth: oauth
+    headers:
+      User-Agent: arcmira-provider/hermes

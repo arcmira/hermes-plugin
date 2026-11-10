@@ -1,0 +1,6 @@
+# Test tooling only. The installed plugin has no runtime dependencies.
+httpx==0.28.1
+packaging==26.0
+python-dotenv==1.2.2
+rich==14.3.3
+ruamel.yaml==0.18.16
