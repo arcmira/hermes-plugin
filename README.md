@@ -20,15 +20,25 @@ hermes plugins install arcmira/hermes-plugin --enable
 
 ## Sign in with OAuth (recommended)
 
+For the safest setup, merge [examples/oauth.yaml](examples/oauth.yaml) into your profile and then run:
+
 ```bash
-hermes mcp add arcmira --url "https://mcp.arcmira.com/mcp?via=hermes" --auth oauth
+hermes mcp login arcmira
 ```
+
+The example includes `trust: untrusted`. Hermes asks before every write-capable call (and any tool the server does not mark read-only); the approval surface offers Allow Once, Session or Always. Choose Always only when you want to pre-authorize that tool.
 
 Hermes opens Arcmira's sign-in page in your browser. Sign in, or create an account, and approve access. Hermes stores and refreshes the token, so you need no API key. When Hermes lists the tools it found, enable all of them.
 
 On a machine with no browser, such as a VPS, Hermes prints the sign-in link. Open it on any device, approve, and paste the address your browser lands on back into Hermes. Do this once in a terminal before you schedule cron jobs; an unattended run never waits for a browser.
 
-If you manage `config.yaml` yourself, merge [examples/oauth.yaml](examples/oauth.yaml) into your profile and run `hermes mcp login arcmira`.
+If you prefer the interactive command, you can use:
+
+```bash
+hermes mcp add arcmira --url "https://mcp.arcmira.com/mcp?via=hermes" --auth oauth
+```
+
+`hermes mcp add` has no trust option. Because a same-name native entry overrides the package declaration, add `trust: untrusted` under `mcp_servers.arcmira` in `config.yaml` before using the connection, then run `hermes mcp login arcmira`.
 
 ## Or use an API key
 
