@@ -74,6 +74,15 @@ class PackageTests(unittest.TestCase):
         self.assertEqual(set(self.package.mcp_servers), {SERVER})
         self.assertEqual({skill.name for skill in self.package.skills}, EXPECTED_SKILLS)
 
+    def test_hosted_server_is_untrusted_in_manifest_and_oauth_example(self):
+        manifest = json.loads((ROOT / "plugin.json").read_text(encoding="utf-8"))
+        self.assertEqual(
+            manifest["extensions"]["com.nousresearch.hermes"]["servers"][SERVER]["trust"],
+            "untrusted",
+        )
+        oauth = YAML(typ="safe").load((ROOT / "examples" / "oauth.yaml").read_text(encoding="utf-8"))
+        self.assertEqual(oauth["mcp_servers"][SERVER]["trust"], "untrusted")
+
     def test_installed_package_exposes_every_skill_and_the_server_only_when_enabled(self):
         from tools.skills_tool import skill_view
 

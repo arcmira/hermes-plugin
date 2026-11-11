@@ -77,7 +77,7 @@ The server provides these tools. They come from the server at run time, so the p
 | [brand-mention-monitoring](skills/brand-mention-monitoring/SKILL.md) | How often a brand comes up, where, and whether it is rising. |
 | [company-watch](skills/company-watch/SKILL.md) | Recent mentions of a company, then a monitor that alerts on new ones. |
 
-The skills are the ones Arcmira ships in [arcmira/mcp](https://github.com/arcmira/mcp) 0.10.14, unchanged. Load one with `skill_view`; `skills_list` shows the names Hermes gives them.
+The skills are the ones Arcmira ships in [arcmira/mcp](https://github.com/arcmira/mcp) 0.10.16, unchanged. Load one with `skill_view`; `skills_list` shows the names Hermes gives them.
 
 ## Monitors and Hermes cron
 

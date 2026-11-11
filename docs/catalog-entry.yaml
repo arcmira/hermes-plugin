@@ -21,7 +21,7 @@ tier: community
 category: web
 requires_hermes: ">=0.22.2"
 docs_url: https://github.com/arcmira/hermes-plugin/blob/REPLACE_WITH_PUSHED_COMMIT_SHA/README.md
-version: "0.10.14"
+version: "0.10.16"
 image: https://raw.githubusercontent.com/arcmira/hermes-plugin/REPLACE_WITH_PUSHED_COMMIT_SHA/assets/arcmira-catalog-card.svg
 readme: true
 platforms: []

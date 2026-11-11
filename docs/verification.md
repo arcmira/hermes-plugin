@@ -6,7 +6,7 @@ Checked 2026-11-08 on macOS with Python 3.14, against three Hermes Agent builds:
 - Stable 0.23.0: `2bd378ed1b8d6bf2192cb26e0a55ff3091e6bd19`.
 - Development `main`: `110afdd60e3098b86950963b06a792e261bd36a4`.
 
-The package bundles the eleven skills of [arcmira/mcp](https://github.com/arcmira/mcp) 0.10.14 (`plugins/arcmira/skills`, commit `303e83e0049194e3df765a1399cb7152dccc187c`), unchanged.
+The package bundles the eleven skills of [arcmira/mcp](https://github.com/arcmira/mcp) 0.10.16 (`plugins/arcmira/skills`, commit `7cab56fb51958e33f352fbeeb6e770e3d55bb736`), unchanged.
 
 ## Package checks
 
@@ -24,7 +24,7 @@ The package bundles the eleven skills of [arcmira/mcp](https://github.com/arcmir
 
 ## Live checks
 
-On Hermes 0.23.0, `hermes plugins install` cloned a local commit of this package into a fresh profile, enabled it and listed it at version 0.10.14. Hermes's MCP layer then connected with an API key taken from the process environment, registered six tools (`arcmira_describe`, `arcmira_execute_read`, `arcmira_execute_write`, `arcmira_feedback`, `arcmira_youtube_search`, `arcmira_youtube_transcript`) and made one `arcmira_youtube_search` call for "Hermes Agent", which returned two passages with titles, channels, seconds and watch links.
+On Hermes 0.23.0, `hermes plugins install` cloned a local commit of this package into a fresh profile, enabled it and listed it at version 0.10.16. Hermes's MCP layer then connected with an API key taken from the process environment, registered six tools (`arcmira_describe`, `arcmira_execute_read`, `arcmira_execute_write`, `arcmira_feedback`, `arcmira_youtube_search`, `arcmira_youtube_transcript`) and made one `arcmira_youtube_search` call for "Hermes Agent", which returned two passages with titles, channels, seconds and watch links.
 
 `hermes mcp add arcmira --url "https://mcp.arcmira.com/mcp?via=hermes" --auth oauth` was started in a terminal with no browser. Hermes read the server's protected-resource metadata, registered itself with Arcmira's authorization server, and printed and opened an authorization link at `api.arcmira.com` with `resource=https://mcp.arcmira.com/mcp`, PKCE `S256` and the server's scopes. It offered to accept the pasted redirect address and stopped at its 60-second connect timeout when no sign-in arrived. Without a terminal, the same command refused to start the flow and told the user to run `hermes mcp login arcmira` interactively first.
 

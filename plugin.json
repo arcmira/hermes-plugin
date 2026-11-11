@@ -1,13 +1,22 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "arcmira",
-  "version": "0.10.14",
+  "version": "0.10.16",
   "description": "YouTube transcript search and monitoring for your AI: exact quotes, full transcripts and speakers, through Arcmira's hosted MCP server.",
   "author": {
     "name": "Arcmira",
     "url": "https://arcmira.com"
   },
   "repository": "https://github.com/arcmira/hermes-plugin",
+  "extensions": {
+    "com.nousresearch.hermes": {
+      "servers": {
+        "arcmira": {
+          "trust": "untrusted"
+        }
+      }
+    }
+  },
   "homepage": "https://arcmira.com",
   "license": "Apache-2.0",
   "keywords": [
