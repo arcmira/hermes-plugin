@@ -13,15 +13,16 @@ description: >-
   the agent writes (programs run on Arcmira's servers, never on your machine), authenticated
   with a Hermes-managed OAuth sign-in through api.arcmira.com or ARCMIRA_API_KEY. Reads,
   transcriptions and alerts use the account's credits. arcmira_execute_write creates and
-  changes monitors that alert by email, Slack or webhook; the skills confirm each one with
-  the user first. arcmira_feedback sends the agent's note to Arcmira. Arcmira logs each tool
-  call on the account. The tool list is served at run time and is not covered by the pinned sha.
+  changes monitors that alert by email, Slack or webhook, and starts Premium transcripts; the
+  skills confirm each monitor with the user first. arcmira_feedback sends the agent's note to
+  Arcmira. Arcmira logs each tool call on the account. The tool list is served at run time and
+  is not covered by the pinned sha.
 maintainer: arcmira
 tier: community
 category: web
 requires_hermes: ">=0.23.0"
 docs_url: https://github.com/arcmira/hermes-plugin/blob/REPLACE_WITH_PUSHED_COMMIT_SHA/README.md
-version: "0.10.16"
+version: "0.10.20"
 image: https://raw.githubusercontent.com/arcmira/hermes-plugin/REPLACE_WITH_PUSHED_COMMIT_SHA/assets/arcmira-catalog-card.svg
 readme: true
 platforms: []
