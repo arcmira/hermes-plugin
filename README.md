@@ -26,7 +26,7 @@ Merge [examples/oauth.yaml](examples/oauth.yaml) into your profile, then run:
 hermes mcp login arcmira
 ```
 
-The example includes `trust: untrusted`. Hermes then asks before `arcmira_execute_read`, `arcmira_execute_write` and `arcmira_feedback`, the tools the server does not mark read-only. Search and transcript reads run without a prompt. The prompt offers Allow Once, Session or Always. Choose Always only when you want to pre-authorize that tool.
+The example includes `trust: untrusted`. Hermes then asks before `arcmira_execute_read`, `arcmira_execute_write` and `arcmira_feedback`, the tools the server does not mark read-only. Search and transcript reads run without a prompt. You can allow a call once, for the session, or always. The terminal labels the last choice "Add to permanent allowlist". Choose it only when you want every later call of that tool to run without asking.
 
 Hermes opens Arcmira's sign-in page in your browser. Sign in, or create an account, and approve access. Hermes stores and refreshes the token, so you need no API key.
 
@@ -91,7 +91,7 @@ The skills are the ones Arcmira ships in [arcmira/mcp](https://github.com/arcmir
 
 ## Monitors and Hermes cron
 
-A monitor is Arcmira's alert: it emails you, posts to Slack, or calls a webhook when a name comes up on YouTube, and it keeps running without Hermes. The `company-watch` skill sets one up after you confirm it. For a digest in your Hermes chat instead, ask Hermes to schedule a cron job that runs one of the skills each day or week. A scheduled run can't answer Hermes's prompt, so Hermes blocks its reads. Before you schedule one, run the skill once in a chat and choose Always for `arcmira_execute_read`.
+A monitor is Arcmira's alert: it emails you, posts to Slack, or calls a webhook when a name comes up on YouTube, and it keeps running without Hermes. The `company-watch` skill sets one up after you confirm it. For a digest in your Hermes chat instead, ask Hermes to schedule a cron job that runs one of the skills each day or week. A scheduled run can't answer Hermes's prompt, so Hermes blocks its reads. Before you schedule one, run the skill once in a chat and allow `arcmira_execute_read` always (in the terminal, "Add to permanent allowlist"). Scheduled reads then run without asking and use credits from your plan. To take it back, remove `mcp:arcmira/arcmira_execute_read` from `command_allowlist` in the profile's `config.yaml`.
 
 ## Data and credits
 
