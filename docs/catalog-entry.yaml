@@ -19,14 +19,14 @@ description: >-
 maintainer: arcmira
 tier: community
 category: web
-requires_hermes: ">=0.22.2"
+requires_hermes: ">=0.23.0"
 docs_url: https://github.com/arcmira/hermes-plugin/blob/REPLACE_WITH_PUSHED_COMMIT_SHA/README.md
 version: "0.10.16"
 image: https://raw.githubusercontent.com/arcmira/hermes-plugin/REPLACE_WITH_PUSHED_COMMIT_SHA/assets/arcmira-catalog-card.svg
 readme: true
 platforms: []
 known_issues:
-  - "Sign in once after installing: hermes mcp add arcmira --url \"https://mcp.arcmira.com/mcp?via=hermes\" --auth oauth"
+  - "Sign in once after installing: merge examples/oauth.yaml from the plugin repo into your profile, then run hermes mcp login arcmira"
   - "On a machine with no browser, open the printed sign-in link on any device and paste the redirect URL back into Hermes, or use ARCMIRA_API_KEY."
   - "Hermes does not prompt for ARCMIRA_API_KEY at install. Set it with hermes config set ARCMIRA_API_KEY <key> only if you skip OAuth."
 capabilities:
