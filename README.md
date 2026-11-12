@@ -20,13 +20,13 @@ hermes plugins install arcmira/hermes-plugin --enable
 
 ## Sign in with OAuth (recommended)
 
-For the safest setup, merge [examples/oauth.yaml](examples/oauth.yaml) into your profile and then run:
+Merge [examples/oauth.yaml](examples/oauth.yaml) into your profile, then run:
 
 ```bash
 hermes mcp login arcmira
 ```
 
-The example includes `trust: untrusted`. Hermes asks before every write-capable call (and any tool the server does not mark read-only); the approval surface offers Allow Once, Session or Always. Choose Always only when you want to pre-authorize that tool.
+The example includes `trust: untrusted`. Hermes then asks before `arcmira_execute_read`, `arcmira_execute_write` and `arcmira_feedback`, the tools the server does not mark read-only. Search and transcript reads run without a prompt. The prompt offers Allow Once, Session or Always. Choose Always only when you want to pre-authorize that tool.
 
 Hermes opens Arcmira's sign-in page in your browser. Sign in, or create an account, and approve access. Hermes stores and refreshes the token, so you need no API key. When Hermes lists the tools it found, enable all of them.
 
