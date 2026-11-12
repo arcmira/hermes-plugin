@@ -74,6 +74,16 @@ class PackageTests(unittest.TestCase):
         self.assertEqual(set(self.package.mcp_servers), {SERVER})
         self.assertEqual({skill.name for skill in self.package.skills}, EXPECTED_SKILLS)
 
+    def test_hosted_server_is_untrusted_in_manifest_and_oauth_example(self):
+        manifest = json.loads((ROOT / "plugin.json").read_text(encoding="utf-8"))
+        self.assertEqual(
+            manifest["extensions"]["com.nousresearch.hermes"]["servers"][SERVER]["trust"],
+            "untrusted",
+        )
+        oauth = YAML(typ="safe").load((ROOT / "examples" / "oauth.yaml").read_text(encoding="utf-8"))
+        self.assertEqual(oauth["mcp_servers"][SERVER]["trust"], "untrusted")
+        self.assertEqual(self.package.mcp_servers[SERVER]["trust"], "untrusted")
+
     def test_installed_package_exposes_every_skill_and_the_server_only_when_enabled(self):
         from tools.skills_tool import skill_view
 
@@ -91,6 +101,7 @@ class PackageTests(unittest.TestCase):
                         self.assertEqual(len(listed), len(EXPECTED_SKILLS) if enabled else 0)
                         if not enabled:
                             continue
+                        self.assertEqual(manager.get_portable_mcp_servers()[SERVER]["trust"], "untrusted")
                         row = next(p for p in manager.list_plugins() if p["name"] == SERVER)
                         self.assertIsNone(row["error"])
                         with patch("hermes_cli.plugins.get_plugin_manager", return_value=manager):
@@ -155,6 +166,7 @@ class PackageTests(unittest.TestCase):
                 self.assertEqual(set(servers), {SERVER})
                 server = _require_rendered_remote(SERVER, servers[SERVER])
                 self.assertEqual(server["auth"], "oauth")
+                self.assertEqual(servers[SERVER]["trust"], "untrusted")
                 self.assertEqual(server["url"], URL)
                 self.assertEqual(server["headers"], {"User-Agent": USER_AGENT})
                 self.assertEqual(len(manager.list_plugin_skill_metadata()), len(EXPECTED_SKILLS))

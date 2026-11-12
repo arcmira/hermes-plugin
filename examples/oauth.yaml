@@ -6,5 +6,6 @@ mcp_servers:
   arcmira:
     url: https://mcp.arcmira.com/mcp?via=hermes
     auth: oauth
+    trust: untrusted
     headers:
       User-Agent: arcmira-provider/hermes

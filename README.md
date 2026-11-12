@@ -4,7 +4,7 @@ YouTube transcript search and monitoring for your AI. Arcmira understands YouTub
 
 Add "use arcmira" to any question to send it to Arcmira first.
 
-This plugin connects Hermes Agent to [Arcmira's hosted MCP server](https://arcmira.com/docs/mcp-server) and bundles eleven research skills. Ask Hermes what a video said, where someone said something, or who sponsors a show, and it answers with the line and a watch link cued to that second. The plugin runs no local code. It needs Hermes Agent 0.22.2 or later with MCP support.
+This plugin connects Hermes Agent to [Arcmira's hosted MCP server](https://arcmira.com/docs/mcp-server) and bundles eleven research skills. Ask Hermes what a video said, where someone said something, or who sponsors a show, and it answers with the line and a watch link cued to that second. The plugin runs no local code. It needs Hermes Agent 0.23.0 or later.
 
 ## Install
 
@@ -18,17 +18,29 @@ Until the catalog listing is live, install from this repository:
 hermes plugins install arcmira/hermes-plugin --enable
 ```
 
+If you are updating from an earlier version, run `hermes gateway restart --detach` once so Hermes picks up the trust setting.
+
 ## Sign in with OAuth (recommended)
+
+Merge [examples/oauth.yaml](examples/oauth.yaml) into your profile, then run:
+
+```bash
+hermes mcp login arcmira
+```
+
+Hermes opens Arcmira's sign-in page in your browser. Sign in, or create an account, and approve access. Hermes stores and refreshes the token, so you need no API key.
+
+On a machine with no browser, such as a VPS, Hermes prints the sign-in link. Open it on any device, approve, and paste the address your browser lands on back into Hermes. Do this once in a terminal before you schedule cron jobs; an unattended run never waits for a browser.
+
+The example includes `trust: untrusted`. Hermes then asks before `arcmira_execute_read`, `arcmira_execute_write` and `arcmira_feedback`, the tools the server does not mark read-only. Search and transcript reads run without a prompt. You can allow a call once, for the session, or always. The terminal labels the last choice "Add to permanent allowlist". Choose it only when you want every later call of that tool to run without asking.
+
+If you prefer the interactive command, you can use:
 
 ```bash
 hermes mcp add arcmira --url "https://mcp.arcmira.com/mcp?via=hermes" --auth oauth
 ```
 
-Hermes opens Arcmira's sign-in page in your browser. Sign in, or create an account, and approve access. Hermes stores and refreshes the token, so you need no API key. When Hermes lists the tools it found, enable all of them.
-
-On a machine with no browser, such as a VPS, Hermes prints the sign-in link. Open it on any device, approve, and paste the address your browser lands on back into Hermes. Do this once in a terminal before you schedule cron jobs; an unattended run never waits for a browser.
-
-If you manage `config.yaml` yourself, merge [examples/oauth.yaml](examples/oauth.yaml) into your profile and run `hermes mcp login arcmira`.
+When Hermes lists the tools it found, enable all of them. `hermes mcp add` has no trust option. Because a same-name native entry overrides the package declaration, add `trust: untrusted` under `mcp_servers.arcmira` in `config.yaml`, then run `hermes gateway restart --detach` and start a new session. Hermes reads the trust line only when its gateway connects the server, so `/reload-mcp` or a new session alone keeps the old setting. If the add stopped before you signed in, use the example instead: replace any `arcmira` entry the add saved with the one in [examples/oauth.yaml](examples/oauth.yaml), then run `hermes mcp login arcmira`.
 
 ## Or use an API key
 
@@ -77,11 +89,11 @@ The server provides these tools. They come from the server at run time, so the p
 | [brand-mention-monitoring](skills/brand-mention-monitoring/SKILL.md) | How often a brand comes up, where, and whether it is rising. |
 | [company-watch](skills/company-watch/SKILL.md) | Recent mentions of a company, then a monitor that alerts on new ones. |
 
-The skills are the ones Arcmira ships in [arcmira/mcp](https://github.com/arcmira/mcp) 0.10.14, unchanged. Load one with `skill_view`; `skills_list` shows the names Hermes gives them.
+The skills are the ones Arcmira ships in [arcmira/mcp](https://github.com/arcmira/mcp) 0.10.16, unchanged. Load one with `skill_view`; `skills_list` shows the names Hermes gives them.
 
 ## Monitors and Hermes cron
 
-A monitor is Arcmira's alert: it emails you, posts to Slack, or calls a webhook when a name comes up on YouTube, and it keeps running without Hermes. The `company-watch` skill sets one up after you confirm it. For a digest in your Hermes chat instead, ask Hermes to schedule a cron job that runs one of the skills each day or week.
+A monitor is Arcmira's alert: it emails you, posts to Slack, or calls a webhook when a name comes up on YouTube, and it keeps running without Hermes. The `company-watch` skill sets one up after you confirm it. For a digest in your Hermes chat instead, ask Hermes to schedule a cron job that runs one of the skills each day or week. A scheduled run can't answer Hermes's prompt, so Hermes blocks its reads. Before you schedule one, run the skill once in a chat and allow `arcmira_execute_read` always (in the terminal, "Add to permanent allowlist"). Scheduled reads then run without asking and use credits from your plan. To take it back, remove `mcp:arcmira/arcmira_execute_read` from `command_allowlist` in the profile's `config.yaml`.
 
 ## Data and credits
 
