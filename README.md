@@ -26,11 +26,11 @@ Merge [examples/oauth.yaml](examples/oauth.yaml) into your profile, then run:
 hermes mcp login arcmira
 ```
 
-The example includes `trust: untrusted`. Hermes then asks before `arcmira_execute_read`, `arcmira_execute_write` and `arcmira_feedback`, the tools the server does not mark read-only. Search and transcript reads run without a prompt. You can allow a call once, for the session, or always. The terminal labels the last choice "Add to permanent allowlist". Choose it only when you want every later call of that tool to run without asking.
-
 Hermes opens Arcmira's sign-in page in your browser. Sign in, or create an account, and approve access. Hermes stores and refreshes the token, so you need no API key.
 
 On a machine with no browser, such as a VPS, Hermes prints the sign-in link. Open it on any device, approve, and paste the address your browser lands on back into Hermes. Do this once in a terminal before you schedule cron jobs; an unattended run never waits for a browser.
+
+The example includes `trust: untrusted`. Hermes then asks before `arcmira_execute_read`, `arcmira_execute_write` and `arcmira_feedback`, the tools the server does not mark read-only. Search and transcript reads run without a prompt. You can allow a call once, for the session, or always. The terminal labels the last choice "Add to permanent allowlist". Choose it only when you want every later call of that tool to run without asking.
 
 If you prefer the interactive command, you can use:
 

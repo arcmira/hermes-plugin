@@ -101,6 +101,7 @@ class PackageTests(unittest.TestCase):
                         self.assertEqual(len(listed), len(EXPECTED_SKILLS) if enabled else 0)
                         if not enabled:
                             continue
+                        self.assertEqual(manager.get_portable_mcp_servers()[SERVER]["trust"], "untrusted")
                         row = next(p for p in manager.list_plugins() if p["name"] == SERVER)
                         self.assertIsNone(row["error"])
                         with patch("hermes_cli.plugins.get_plugin_manager", return_value=manager):

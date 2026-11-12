@@ -45,7 +45,7 @@ This revision marks the hosted server `trust: untrusted` and raises the floor to
 
 ## Package checks
 
-`python scripts/test.py --hermes-source <checkout>` runs 13 checks, one more than on 2026-11-08. The new check confirms that the hosted server is `untrusted` in `plugin.json` and `examples/oauth.yaml`, and that Hermes's own loader and config merge keep that setting. The checks pass on Hermes 0.23.0 (`2bd378ed1b8d6bf2192cb26e0a55ff3091e6bd19`) and 0.23.1 (`3b421578588243f920886e6fe79a6faa87ea026e`). CI runs them on Linux, macOS and Windows.
+`python scripts/test.py --hermes-source <checkout>` runs 13 checks, one more than on 2026-11-08. The new check confirms that the hosted server is `untrusted` in `plugin.json` and `examples/oauth.yaml`, and that Hermes's own loader keeps that setting. Two existing checks now also confirm that Hermes keeps it, on the API-key setup with no `config.yaml` entry and through the config merge with the OAuth example. The checks pass on Hermes 0.23.0 (`2bd378ed1b8d6bf2192cb26e0a55ff3091e6bd19`) and 0.23.1 (`3b421578588243f920886e6fe79a6faa87ea026e`). CI runs them on Linux, macOS and Windows.
 
 ## Live checks on Hermes 0.23.1
 
@@ -54,7 +54,7 @@ These ran in a fresh profile on macOS, with Hermes 0.23.1 and this package insta
 - Right after the install, `hermes mcp login arcmira` answered "Server 'arcmira' not found in config." The login command reads only `config.yaml`.
 - After `examples/oauth.yaml` was merged into `config.yaml`, the same command started Arcmira's OAuth sign-in. It printed an authorization link at `api.arcmira.com` with `resource=https://mcp.arcmira.com/mcp` and PKCE `S256`. No sign-in was completed.
 - The remaining checks used the same entry with the API-key header in place of OAuth, and with `trust: untrusted` kept. Hermes logged that the package's server conflicts with the `config.yaml` entry and skipped the package's server. It registered the six Arcmira tools. `arcmira_describe`, `arcmira_youtube_search` and `arcmira_youtube_transcript` were the read-only ones.
-- A call to `arcmira_execute_write` through Hermes's tool handler showed the trust prompt. When the prompt was answered Deny, Hermes returned "The command was NOT run." With no `trust` line, as `hermes mcp add` writes the entry, the server was `full` and the call went ahead with no prompt.
+- A call to `arcmira_execute_write` through Hermes's tool handler showed the trust prompt. When the prompt was answered Deny, Hermes returned "The command was NOT run." With no `trust` line, as `hermes mcp add` writes the entry, the server was `full` and Hermes's gate let the call through without a prompt.
 - A cron job ran the `arcmira` skill with one `arcmira_execute_read` call. Hermes blocked the read, logging "no user can answer in this session". In an interactive `hermes chat`, `arcmira_execute_read` was then allowed always ("Add to permanent allowlist" in the terminal). The profile's `config.yaml` then listed `mcp:arcmira/arcmira_execute_read` under `command_allowlist`. After that, the same cron job's read ran and returned the plan. With that entry removed from `command_allowlist`, the next cron run's read was blocked again.
 
 ## Hermes 0.22.2
