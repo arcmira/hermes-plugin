@@ -76,3 +76,29 @@ On 0.22.2 the trust prompt approves one call or denies it and remembers no answe
 - A completed browser OAuth sign-in and a tool call over OAuth.
 - The prompt in Telegram, Discord and other gateway surfaces.
 - Live runs on Windows and Linux. CI runs the package checks there.
+
+# 2026-11-12: Arcmira MCP 0.10.20 and a cron read with no allowlist entry
+
+Arcmira MCP 0.10.20 (release [v0.10.20](https://github.com/arcmira/mcp/releases/tag/v0.10.20) of arcmira/mcp) marks `arcmira_execute_read` read-only, and `arcmira_execute_write` starts Premium transcripts and translations. This revision bundles the eleven skills of [arcmira/mcp](https://github.com/arcmira/mcp) 0.10.20 (`plugins/arcmira/skills`, commit `996342236bbf952cd4ab60214684bf5dfa6d6b25`), unchanged. Three of them differ from 0.10.16: `arcmira`, `find-quotes` and `youtube-transcript-search`. The sections above are the record of earlier releases. On 0.10.20, the cron check in "Live checks on Hermes 0.23.1" no longer needs the `command_allowlist` entry.
+
+## Package checks
+
+`python scripts/test.py --hermes-source <checkout>` runs the same 13 checks and passes on macOS on Hermes 0.23.0 (`2bd378ed1b8d6bf2192cb26e0a55ff3091e6bd19`) and 0.23.1 (`3b421578588243f920886e6fe79a6faa87ea026e`). `hermes plugins validate .` passes on 0.23.1: the portable manifest parses, the server's trust is `untrusted` and the security scan is `safe`.
+
+## A cron read on Hermes 0.23.1
+
+This ran on 2026-11-12 on macOS, against the hosted server at Arcmira MCP 0.10.20, in the profile and with the API-key entry from "Live checks on Hermes 0.23.1".
+
+- Hermes 0.23.1 (`3b421578588243f920886e6fe79a6faa87ea026e`). The `arcmira` entry in `config.yaml` had `trust: untrusted`, and `command_allowlist` was empty (`[]`).
+- No gateway was running. Hermes's MCP schema cache still held the annotations from the profile's last connect, before 0.10.20, with `readOnlyHint` false for `arcmira_execute_read`.
+- `hermes gateway restart --detach` started a new gateway, which connected the server and registered the six Arcmira tools. The server reported version 0.10.20, and `arcmira_execute_read` came through with `readOnlyHint: true`. The schema cache was rewritten with `readOnlyHint` true for it.
+- `hermes cron create` made a job that asked for one `arcmira_execute_read` program read, a price quote of one video: `return (await arcmira.price("aircAruvnKk")).owned;`. `hermes cron run` ran it at once.
+- The model's first call passed the program as `program` instead of `code`. Hermes refused it before invoking the tool ("The tool was NOT invoked") and sent no request. The model retried with `code`.
+- That call ran with no allowlist entry and no prompt. Hermes's log has no approval or trust-gate line for the run. The server ran the read (`GET /v1/transcripts/aircAruvnKk/quote`) and returned `false`: the account did not yet own that video's Premium transcript. The job's output reported the result.
+- After the run, `command_allowlist` was still empty and `config.yaml` was unchanged.
+- The account's usage, read before and after the run, did not change. The run used no credits.
+
+## Not checked
+
+- A gateway left running from before 0.10.20. The check above started a new gateway, so it does not show whether a running one keeps the old annotation.
+- A cron read over the OAuth sign-in. The run used the API-key entry.

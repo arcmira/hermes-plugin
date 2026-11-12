@@ -32,7 +32,7 @@ Hermes opens Arcmira's sign-in page in your browser. Sign in, or create an accou
 
 On a machine with no browser, such as a VPS, Hermes prints the sign-in link. Open it on any device, approve, and paste the address your browser lands on back into Hermes. Do this once in a terminal before you schedule cron jobs; an unattended run never waits for a browser.
 
-The example includes `trust: untrusted`. Hermes then asks before `arcmira_execute_read`, `arcmira_execute_write` and `arcmira_feedback`, the tools the server does not mark read-only. Search and transcript reads run without a prompt. You can allow a call once, for the session, or always. The terminal labels the last choice "Add to permanent allowlist". Choose it only when you want every later call of that tool to run without asking.
+The example includes `trust: untrusted`. Hermes then asks before `arcmira_execute_write` and `arcmira_feedback`, the tools the server does not mark read-only. Search, transcript and program reads run without a prompt. You can allow a call once, for the session, or always. The terminal labels the last choice "Add to permanent allowlist". Choose it only when you want every later call of that tool to run without asking.
 
 If you prefer the interactive command, you can use:
 
@@ -68,7 +68,7 @@ The server provides these tools. They come from the server at run time, so the p
 | --- | --- |
 | `arcmira_describe` | Returns the reference for the `arcmira` client: methods, arguments, return fields, examples and errors. Reads no indexed content and bills nothing. |
 | `arcmira_execute_read` | Runs a JavaScript program against the Arcmira API on Arcmira's servers: transcripts, quote search, mentions, sponsors and monitors. |
-| `arcmira_execute_write` | Runs the same client plus monitor writes: create and change monitors that alert by email, Slack or webhook. |
+| `arcmira_execute_write` | Runs the same client plus monitor writes: create and change monitors that alert by email, Slack or webhook. It also starts Premium transcripts and translations. |
 | `arcmira_youtube_search` | Searches what was said in YouTube videos and returns the matching passages with the second each starts and a watch link. |
 | `arcmira_youtube_transcript` | Reads one video's whole transcript, timestamped, from its id or link. |
 | `arcmira_feedback` | Tells Arcmira when a result was wrong, slow, empty or missing a source. |
@@ -89,11 +89,13 @@ The server provides these tools. They come from the server at run time, so the p
 | [brand-mention-monitoring](skills/brand-mention-monitoring/SKILL.md) | How often a brand comes up, where, and whether it is rising. |
 | [company-watch](skills/company-watch/SKILL.md) | Recent mentions of a company, then a monitor that alerts on new ones. |
 
-The skills are the ones Arcmira ships in [arcmira/mcp](https://github.com/arcmira/mcp) 0.10.16, unchanged. Load one with `skill_view`; `skills_list` shows the names Hermes gives them.
+The skills are the ones Arcmira ships in [arcmira/mcp](https://github.com/arcmira/mcp) 0.10.20, unchanged. Load one with `skill_view`; `skills_list` shows the names Hermes gives them.
 
 ## Monitors and Hermes cron
 
-A monitor is Arcmira's alert: it emails you, posts to Slack, or calls a webhook when a name comes up on YouTube, and it keeps running without Hermes. The `company-watch` skill sets one up after you confirm it. For a digest in your Hermes chat instead, ask Hermes to schedule a cron job that runs one of the skills each day or week. A scheduled run can't answer Hermes's prompt, so Hermes blocks its reads. Before you schedule one, run the skill once in a chat and allow `arcmira_execute_read` always (in the terminal, "Add to permanent allowlist"). Scheduled reads then run without asking and use credits from your plan. To take it back, remove `mcp:arcmira/arcmira_execute_read` from `command_allowlist` in the profile's `config.yaml`.
+A monitor is Arcmira's alert: it emails you, posts to Slack, or calls a webhook when a name comes up on YouTube, and it keeps running without Hermes. The `company-watch` skill sets one up after you confirm it. For a digest in your Hermes chat instead, ask Hermes to schedule a cron job that runs one of the skills each day or week. Scheduled reads run without asking and use credits from your plan. A scheduled run can't answer Hermes's prompt, so unless you allowed `arcmira_execute_write` always, it starts no Premium transcript and changes no monitor.
+
+Hermes reads each tool's read-only annotation when its gateway connects the server, so a gateway that connected before Arcmira MCP 0.10.20 can keep the old annotation. If Hermes still asks before a program read, run `hermes gateway restart --detach` and start a new session.
 
 ## Data and credits
 
