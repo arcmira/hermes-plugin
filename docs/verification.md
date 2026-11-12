@@ -57,6 +57,15 @@ These ran in a fresh profile on macOS, with Hermes 0.23.1 and this package insta
 - A call to `arcmira_execute_write` through Hermes's tool handler showed the trust prompt. When the prompt was answered Deny, Hermes returned "The command was NOT run." With no `trust` line, as `hermes mcp add` writes the entry, the server was `full` and Hermes's gate let the call through without a prompt.
 - A cron job ran the `arcmira` skill with one `arcmira_execute_read` call. Hermes blocked the read, logging "no user can answer in this session". In an interactive `hermes chat`, `arcmira_execute_read` was then allowed always ("Add to permanent allowlist" in the terminal). The profile's `config.yaml` then listed `mcp:arcmira/arcmira_execute_read` under `command_allowlist`. After that, the same cron job's read ran and returned the plan. With that entry removed from `command_allowlist`, the next cron run's read was blocked again.
 
+## When the trust setting applies
+
+Hermes 0.23.1 records a server's trust setting when its gateway connects the server. These checks ran on macOS with the API-key entry above. Each read was one `arcmira_execute_read` call, and each prompt was answered Deny.
+
+- A chat started the gateway, with no service installed and no `trust` line. After the line was added, `hermes gateway restart` stopped that gateway and ran the new one in the same terminal until Ctrl+C. `hermes gateway restart --detach` started the new one in the background and returned. In both cases the next chat asked before the read.
+- With the gateway installed as a launchd service, `hermes gateway restart` and `hermes gateway restart --detach` each returned, and launchd ran the new gateway with its cron scheduler. The next chat asked before the read. After `hermes gateway stop`, the gateway and the cron scheduler stayed down until the next chat started the service again.
+- With this package installed at `34231f97eaacb5461a3f9e23c22d851330df98f6`, before its trust setting, and a gateway connected, the package was moved to this revision with `hermes plugins install --force --ref`. Hermes printed "Gateway reloaded plugins — deferred: MCP servers (next session)", and the next chat ran the read without asking.
+- With a gateway running, `hermes mcp add arcmira --url "https://mcp.arcmira.com/mcp?via=hermes" --auth header` added the server, and a new chat ran the read with no restart.
+
 ## Hermes 0.22.2
 
 On 0.22.2 the trust prompt approves one call or denies it and remembers no answer. Every read asks again, and a scheduled run's reads are always blocked. Session and Always are remembered from 0.23.0 onward, so 0.23.0 is the floor.

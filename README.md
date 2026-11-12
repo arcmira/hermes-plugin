@@ -18,6 +18,8 @@ Until the catalog listing is live, install from this repository:
 hermes plugins install arcmira/hermes-plugin --enable
 ```
 
+If you are updating from an earlier version, run `hermes gateway restart --detach` once so Hermes picks up the trust setting.
+
 ## Sign in with OAuth (recommended)
 
 Merge [examples/oauth.yaml](examples/oauth.yaml) into your profile, then run:
@@ -38,7 +40,7 @@ If you prefer the interactive command, you can use:
 hermes mcp add arcmira --url "https://mcp.arcmira.com/mcp?via=hermes" --auth oauth
 ```
 
-When Hermes lists the tools it found, enable all of them. `hermes mcp add` has no trust option. Because a same-name native entry overrides the package declaration, add `trust: untrusted` under `mcp_servers.arcmira` in `config.yaml` before using the connection, then start a new session. If the add stopped before you signed in, use the example instead: replace any `arcmira` entry the add saved with the one in [examples/oauth.yaml](examples/oauth.yaml), then run `hermes mcp login arcmira`.
+When Hermes lists the tools it found, enable all of them. `hermes mcp add` has no trust option. Because a same-name native entry overrides the package declaration, add `trust: untrusted` under `mcp_servers.arcmira` in `config.yaml`, then run `hermes gateway restart --detach` and start a new session. Hermes reads the trust line only when its gateway connects the server, so `/reload-mcp` or a new session alone keeps the old setting. If the add stopped before you signed in, use the example instead: replace any `arcmira` entry the add saved with the one in [examples/oauth.yaml](examples/oauth.yaml), then run `hermes mcp login arcmira`.
 
 ## Or use an API key
 
